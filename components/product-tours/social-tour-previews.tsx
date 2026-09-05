@@ -52,9 +52,11 @@ export function DemoFriends({
               <UserAvatar name={TOUR_DEMO_PEOPLE.requester} size="sm" />
               <div>
                 <h3 className="font-semibold">{TOUR_DEMO_PEOPLE.requester}</h3>
-                <p role="status" className="text-sm text-muted">
-                  {incoming === "accepted" ? "Friends" : "Wants to be friends"}
-                </p>
+                {incoming === "pending" && (
+                  <p role="status" className="text-sm text-muted">
+                    Wants to be friends
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex gap-2">

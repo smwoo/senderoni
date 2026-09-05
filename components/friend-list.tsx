@@ -50,39 +50,44 @@ export function FriendList({
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-x-8 lg:grid-cols-2">
-        {items.map((friend) => (
-          <article
-            key={friend.id}
-            className="flex min-w-0 flex-col gap-3 border-b border-separator py-4 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <div className="flex min-w-0 items-center gap-3">
-              <UserAvatar name={friend.name} image={friend.image} size="sm" />
-              <div className="min-w-0">
-                <h2 className="truncate font-semibold">
-                  {friend.isPrivate ? (
-                    friend.name
-                  ) : (
-                    <AppLink href={`/users/${friend.id}`}>{friend.name}</AppLink>
-                  )}
-                </h2>
-                <p className="text-sm text-muted">
-                  {friend.friendshipStatus === "incoming"
-                    ? "Wants to be friends"
-                    : friend.friendshipStatus === "outgoing"
-                      ? "Waiting for a reply"
-                      : "Friends"}
-                  {friend.isPrivate ? " · Private profile" : ""}
-                </p>
+        {items.map((friend) => {
+          const detail = [
+            friend.friendshipStatus === "incoming"
+              ? "Wants to be friends"
+              : friend.friendshipStatus === "outgoing"
+                ? "Waiting for a reply"
+                : null,
+            friend.isPrivate ? "Private profile" : null,
+          ]
+            .filter(Boolean)
+            .join(" · ");
+          return (
+            <article
+              key={friend.id}
+              className="flex min-w-0 flex-col gap-3 border-b border-separator py-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="flex min-w-0 items-center gap-3">
+                <UserAvatar name={friend.name} image={friend.image} size="sm" />
+                <div className="min-w-0">
+                  <h2 className="truncate font-semibold">
+                    {friend.isPrivate ? (
+                      friend.name
+                    ) : (
+                      <AppLink href={`/users/${friend.id}`}>{friend.name}</AppLink>
+                    )}
+                  </h2>
+                  {detail && <p className="text-sm text-muted">{detail}</p>}
+                </div>
               </div>
-            </div>
-            <FriendshipButton
-              userId={friend.id}
-              name={friend.name}
-              initialStatus={friend.friendshipStatus}
-              signedIn
-            />
-          </article>
-        ))}
+              <FriendshipButton
+                userId={friend.id}
+                name={friend.name}
+                initialStatus={friend.friendshipStatus}
+                signedIn
+              />
+            </article>
+          );
+        })}
       </div>
       {hasMore && (
         <LoadMoreButton onPress={loadMore} loading={loadingMore} failed={loadMoreFailed} />

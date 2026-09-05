@@ -95,6 +95,9 @@ relationship state. Share-profile links help people find climbing partners.
   stale responses. The endpoint is session-scoped and returns no requester identities.
 - Search and profile headers use the same Add friend / request / Remove friend
   component. Controls wrap below names on mobile.
+- Accepted friends have no repeated Friends subtitle in the Friends list or tour
+  demo. Private profile notices and pending request details remain. This copy
+  refinement updates the existing demo without another tour version bump.
 - Account has three journal audiences: Only me, Friends, Public. Save failures show
   an accessible error and retain the previous setting.
 - API routes use `Cache-Control: private, no-store`. Social routes and profile
