@@ -32,6 +32,9 @@ export default defineConfig({
       "components/**/*.test.{ts,tsx}",
       "db/**/*.test.{ts,tsx}",
       "lib/**/*.test.{ts,tsx}",
+      // Pure helpers only — a script's own I/O uses node builtins the Workers
+      // pool doesn't provide.
+      "scripts/**/*.test.{ts,tsx}",
     ],
     exclude: [".claude/**", "node_modules/**"],
     setupFiles: ["./test/apply-migrations.ts"],

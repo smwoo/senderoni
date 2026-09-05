@@ -193,9 +193,14 @@ export default defineConfig({
     },
     {
       // CLI scripts talk to the operator over stdout/stderr — that's their UI.
+      // They also run under plain node, which resolves neither the `@/` alias
+      // nor a bare specifier for first-party code, so reaching `lib/` from a
+      // script means a relative parent import. Allowed here rather than
+      // duplicating domain rules a script has to agree with.
       files: ["scripts/**"],
       rules: {
         "no-console": "off",
+        "import/no-relative-parent-imports": "off",
       },
     },
     {

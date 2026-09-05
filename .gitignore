@@ -56,3 +56,5 @@ climbs_data
 
 # Claude Code worktrees; the rest of .claude is shared config
 .claude/worktrees/
+# backfill script artifacts (generated SQL, rollback, review CSV)
+backfill-out/
