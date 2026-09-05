@@ -8,6 +8,7 @@ import { useReportNavigationPending } from "@/components/navigation-pending";
 import { AppLink } from "@/components/ui/app-link";
 import { choicePillClass } from "@/components/ui/choice-pill";
 import { useDebouncedReplace } from "@/hooks/use-debounced-replace";
+import { formatDate } from "@/lib/format-date";
 import {
   JOURNAL_VIEWS,
   MAX_JOURNAL_QUERY_LENGTH,
@@ -85,6 +86,15 @@ export function JournalFilterToolbar({
         >
           {filter.year}
           <X className="size-3.5" aria-hidden />
+        </AppLink>
+      )}
+      {filter.date && (
+        <AppLink
+          href={href(base, { ...filter, date: undefined })}
+          className={choicePillClass(true, "bg-surface-secondary text-foreground")}
+          aria-label="Clear day filter"
+        >
+          {formatDate(filter.date)} · Clear day
         </AppLink>
       )}
       {filter.tag && (

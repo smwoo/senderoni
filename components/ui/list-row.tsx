@@ -23,6 +23,8 @@ type ListRowProps = {
    * separate from `trailing` so it never gets pulled into that column's
    * own vertical stack. */
   actions?: ReactNode;
+  /** Give longer action controls their own line on narrow screens. */
+  stackActionsOnMobile?: boolean;
   comment?: string | null;
   /** Who the comment belongs to — rendered on its own line directly above
    * it, outside the clamp so it never spends one of the comment's visible
@@ -41,6 +43,7 @@ export function ListRow({
   tags,
   trailing,
   actions,
+  stackActionsOnMobile = false,
   comment,
   commentAuthor,
   className,
@@ -52,6 +55,7 @@ export function ListRow({
         // divide-y hairlines, so no rounding — px keeps the tap target
         // breathing while py-3 tightens the table.
         "relative flex items-center gap-4 px-4 py-3",
+        stackActionsOnMobile && "flex-wrap sm:flex-nowrap",
         href != null &&
           "transition-colors focus-within:bg-surface-secondary/60 hover:bg-surface-secondary/60",
         className,
@@ -109,7 +113,16 @@ export function ListRow({
          * right — and it must never shrink, or the values it holds wrap. */}
         {trailing && <div className="shrink-0 text-right tabular-nums">{trailing}</div>}
       </div>
-      {actions && <div className="relative z-10 shrink-0">{actions}</div>}
+      {actions && (
+        <div
+          className={clsx(
+            "relative z-10 shrink-0",
+            stackActionsOnMobile && "basis-full sm:basis-auto",
+          )}
+        >
+          {actions}
+        </div>
+      )}
     </div>
   );
 }

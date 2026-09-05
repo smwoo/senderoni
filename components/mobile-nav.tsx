@@ -5,10 +5,13 @@ import { Menu as MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
+import { FriendRequestDot } from "@/components/friend-request-badge";
+import { useFriendRequests } from "@/components/friend-requests-provider";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useDeferredComponent } from "@/hooks/use-deferred-component";
 import { useMounted } from "@/hooks/use-mounted";
 import { authClient } from "@/lib/auth-client";
+import { formatCount } from "@/lib/format";
 
 /** Module-level so its identity is stable across renders — the preload hook
  * keys its effect on the loader. */
@@ -22,6 +25,9 @@ export function MobileNav() {
   const { data: session, isPending } = authClient.useSession();
   const { Component: MobileNavDrawer, load } = useDeferredComponent(loadDrawer);
   const showAccountAvatar = mounted && !isPending && session != null;
+  const requests = useFriendRequests();
+  const requestCount =
+    showAccountAvatar && requests.userId === session.user.id ? (requests.count ?? 0) : 0;
 
   // Pulls the drawer in on the way to opening, for a tap that beats the idle
   // preload. Ordinarily already resolved, so this is a no-op.
@@ -46,8 +52,12 @@ export function MobileNav() {
         isIconOnly
         variant="ghost"
         size="sm"
-        className="md:hidden"
-        aria-label="Open menu"
+        className="relative md:hidden"
+        aria-label={
+          requestCount
+            ? `Open menu, ${formatCount(requestCount, "pending friend request")}`
+            : "Open menu"
+        }
         onPress={openMenu}
       >
         {showAccountAvatar ? (
@@ -55,6 +65,7 @@ export function MobileNav() {
         ) : (
           <MenuIcon className="size-5" />
         )}
+        {requestCount > 0 && <FriendRequestDot className="absolute top-0 right-0" />}
       </Button>
       {MobileNavDrawer && (
         <MobileNavDrawer isOpen={state.isOpen} onOpenChange={setOpen} onClose={close} />

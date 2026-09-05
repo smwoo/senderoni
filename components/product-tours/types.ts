@@ -4,6 +4,7 @@ import type { ProductTourStepDefinition } from "@/lib/product-tour-navigation";
 
 export type ProductTourPageProps = {
   section: string;
+  mode: "full" | "updates";
   href: (stepId: string) => string;
   steps: readonly ProductTourStepDefinition[];
 };

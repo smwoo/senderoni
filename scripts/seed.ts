@@ -24,6 +24,7 @@ import { faker } from "@faker-js/faker";
 import { hashPassword } from "better-auth/crypto";
 
 import { requireLocalDb } from "./d1-local.ts";
+import { seedSocialData } from "./seed-social.ts";
 
 // Ordinals into BOULDER_HUECO (VB–V17) and ROPE_YDS (5.0–5.15d) in lib/grades.
 // Duplicated rather than imported: lib/ is reached through the `@/` alias, which
@@ -131,6 +132,14 @@ async function main() {
       );
     } else {
       console.log(`Left ${existing.toLocaleString()} existing climbs alone (--force regenerates).`);
+    }
+
+    if (regenerate || args.includes("--social")) {
+      const viewer = db.prepare("SELECT id FROM user WHERE email = ?").get(email) as { id: string };
+      const socialCount = seedSocialData(db, viewer.id);
+      console.log(
+        `Added ${socialCount} friendships and requests and refreshed synthetic social scenarios.`,
+      );
     }
 
     db.exec("commit");

@@ -13,6 +13,7 @@ import { ASCENT_STYLES, GRADE_FEEL_OFFSET, type AscentStyle, type GradeFeel } fr
 
 import { areaNameCondition } from "./areas";
 import type { Climb } from "./climbs";
+import { journalVisibleSql } from "./journal-access";
 import { disciplineGradeCondition, toFtsPrefixQuery } from "./shared";
 
 export type Send = typeof sends.$inferSelect;
@@ -63,7 +64,9 @@ export async function getSendsForClimb(
       userName: user.name,
       ascentStyle: sends.ascentStyle,
       dateSent: sends.dateSent,
-      comment: sends.comment,
+      comment: sql<
+        string | null
+      >`CASE WHEN ${journalVisibleSql(viewerId, sql`sends.user_id`)} THEN ${sends.comment} ELSE NULL END`,
       rating: sends.rating,
       suggestedGrade: sends.suggestedGrade,
       gradeFeel: sends.gradeFeel,
@@ -168,6 +171,7 @@ export type UserSendsSort =
   | "rating_asc";
 
 export type UserSendsFilter = DisciplineFilter & {
+  date?: string;
   name?: string;
   areaName?: string;
   sort?: UserSendsSort;
@@ -212,6 +216,7 @@ function userSendsWhere(userId: string, filter: UserSendsFilter): SQL {
     disciplineClauses.length > 0 ? sql`(${sql.join(disciplineClauses, sql` OR `)})` : sql`1`;
 
   const conditions: SQL[] = [sql`sends.user_id = ${userId}`, disciplineWhere];
+  if (filter.date) conditions.push(sql`sends.date_sent = ${filter.date}`);
 
   if (filter.ascentStyles.length > 0) {
     conditions.push(
@@ -241,7 +246,8 @@ function userSendsWhere(userId: string, filter: UserSendsFilter): SQL {
   return sql.join(conditions, sql` AND `);
 }
 
-const USER_SEND_COLUMNS = sql`
+function userSendColumns(viewerId: string | null) {
+  return sql`
       sends.id AS id,
       sends.climb_id AS climbId,
       climbs.name AS climbName,
@@ -254,8 +260,9 @@ const USER_SEND_COLUMNS = sql`
       sends.rating AS rating,
       sends.suggested_grade AS suggestedGrade,
       sends.grade_feel AS gradeFeel,
-      sends.comment AS comment
+      CASE WHEN ${journalVisibleSql(viewerId, sql`sends.user_id`)} THEN sends.comment ELSE NULL END AS comment
 `;
+}
 
 export async function getSendsForUserPage(
   db: Database,
@@ -263,11 +270,12 @@ export async function getSendsForUserPage(
   filter: UserSendsFilter,
   offset: number,
   pageSize: number = USER_SENDS_PAGE_SIZE,
+  viewerId: string | null = null,
 ): Promise<UserSendsPage> {
   const where = userSendsWhere(userId, filter);
 
   const rows = await db.all<UserSendRow>(sql`
-    SELECT ${USER_SEND_COLUMNS}
+    SELECT ${userSendColumns(viewerId)}
     FROM sends
     JOIN climbs ON climbs.id = sends.climb_id
     JOIN areas ON areas.id = climbs.area_id
@@ -338,7 +346,7 @@ function getUserExportRows(
   limit: number,
 ): Promise<UserSendRow[]> {
   return db.all<UserSendRow>(sql`
-    SELECT ${USER_SEND_COLUMNS}
+    SELECT ${userSendColumns(userId)}
     FROM sends INDEXED BY sends_user_date_idx
     JOIN climbs ON climbs.id = sends.climb_id
     JOIN areas ON areas.id = climbs.area_id

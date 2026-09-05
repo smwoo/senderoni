@@ -118,6 +118,7 @@ export function UserSendsFilterToolbar({
     reset,
   } = useFilterFormNavigation({
     initialFilter: {
+      date: filter.date,
       disciplines: filter.disciplines,
       boulderRange: filter.boulderRange,
       sportRange: filter.sportRange,

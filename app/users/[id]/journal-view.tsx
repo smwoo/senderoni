@@ -15,29 +15,28 @@ import {
   getJournalPage,
   getProductTourState,
 } from "@/db/queries";
-import type { JournalOwner } from "@/db/queries";
 import { calendarMonth } from "@/lib/format-date";
 import type { JournalFilter } from "@/lib/journal-filter";
 
 export async function JournalView({
-  owner,
+  ownerId,
   viewerId,
   filter,
 }: {
-  owner: JournalOwner;
+  ownerId: string;
   viewerId: string | null;
   filter: JournalFilter;
 }) {
   const db = await getDb();
-  const isOwner = viewerId === owner.id;
+  const isOwner = viewerId === ownerId;
   const { cf } = await getCloudflareContext({ async: true });
   const month = calendarMonth(new Date(), cf?.timezone ?? "UTC");
 
   const [counts, firstPage, filteredClimb, tourState] = await Promise.all([
-    getJournalCounts(db, owner, viewerId, month),
-    getJournalPage(db, owner, viewerId, filter),
+    getJournalCounts(db, ownerId, viewerId, month),
+    getJournalPage(db, ownerId, viewerId, filter),
     filter.climbId === null ? Promise.resolve(null) : getClimb(db, filter.climbId),
-    isOwner ? getProductTourState(db, owner.id) : Promise.resolve(null),
+    isOwner ? getProductTourState(db, ownerId) : Promise.resolve(null),
   ]);
   const areaBreadcrumbs = await getAreaBreadcrumbs(
     db,
@@ -77,14 +76,14 @@ export async function JournalView({
           <SectionHeading>Journal</SectionHeading>
           {counts.entries > 0 && (
             <JournalFilterToolbar
-              userId={owner.id}
+              userId={ownerId}
               filter={filter}
               climbName={filteredClimb?.name ?? null}
             />
           )}
           <JournalTimeline
             key={JSON.stringify(filter)}
-            userId={owner.id}
+            userId={ownerId}
             filter={filter}
             initialEntries={firstPage.entries}
             initialHasMore={firstPage.hasMore}

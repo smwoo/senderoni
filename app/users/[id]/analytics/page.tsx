@@ -20,6 +20,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { getDb } from "@/db/client";
 import { getJournalSessionsForAnalytics, getUserSendsForAnalytics } from "@/db/queries";
+import { canReadJournal } from "@/db/queries/journal-access";
 import { formatCount } from "@/lib/format";
 import type { ClimbType } from "@/lib/grades";
 import type { SearchParamsRecord } from "@/lib/search-params";
@@ -32,7 +33,7 @@ import {
   formatMonthLabel,
   parseDisciplineScope,
 } from "@/lib/user-analytics";
-import { canViewJournal, canViewUser } from "@/lib/user-visibility";
+import { canViewUser } from "@/lib/user-visibility";
 
 type UserAnalyticsPageProps = {
   params: Promise<{ id: string }>;
@@ -60,11 +61,11 @@ export default async function UserAnalyticsPage({ params, searchParams }: UserAn
   const viewerId = session?.user.id ?? null;
   if (!canViewUser(user, viewerId)) notFound();
 
-  const journalVisible = canViewJournal(user, viewerId);
+  const journalVisible = await canReadJournal(db, user.id, viewerId);
   const [rows, journalSessions] = await Promise.all([
     getUserSendsForAnalytics(db, id),
     journalVisible
-      ? getJournalSessionsForAnalytics(db, user, viewerId)
+      ? getJournalSessionsForAnalytics(db, user.id, viewerId)
       : Promise.resolve(undefined),
   ]);
 

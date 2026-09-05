@@ -13,6 +13,7 @@ export function revalidateSendSurfaces({
   areaIds: Iterable<number>;
 }) {
   revalidatePath("/");
+  revalidatePath("/feed");
   for (const userId of new Set(userIds)) {
     revalidatePath(`/users/${userId}`);
     revalidatePath(`/users/${userId}/sends`);
@@ -30,6 +31,7 @@ export function revalidateJournalSurfaces({
   userId: string;
   climbIds: Iterable<number>;
 }) {
+  revalidatePath("/feed");
   revalidatePath(`/users/${userId}`);
   revalidatePath(`/users/${userId}/journal`);
   revalidatePath(`/users/${userId}/projects`);

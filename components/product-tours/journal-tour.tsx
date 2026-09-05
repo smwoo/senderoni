@@ -2,7 +2,10 @@
 
 import { buttonVariants } from "@heroui/react";
 import { CirclePlus } from "lucide-react";
+import { useState } from "react";
 
+import { FriendRequestBadge } from "@/components/friend-request-badge";
+import { DemoClimberSearch } from "@/components/product-tours/climber-search-preview";
 import {
   DemoAccount,
   DemoAnalytics,
@@ -10,6 +13,7 @@ import {
   DemoProjects,
   DemoSends,
 } from "@/components/product-tours/profile-tour-previews";
+import { DemoFeed, DemoFriends } from "@/components/product-tours/social-tour-previews";
 import type { ProductTourPageProps } from "@/components/product-tours/types";
 import { ProfileHeading } from "@/components/profile-heading";
 import { ProfileSectionNav } from "@/components/profile-tabs";
@@ -38,20 +42,34 @@ function DemoLog() {
   );
 }
 
-export function JournalTourPage({ section, href, steps }: ProductTourPageProps) {
+export function JournalTourPage({ section, mode, href, steps }: ProductTourPageProps) {
   const isJournal = section === "Journal";
+  const [friendRequest, setFriendRequest] = useState<"pending" | "accepted" | null>("pending");
+  const sections = ["Journal", "Sends", "Feed", "Friends", "Projects", "Analytics", "Account"];
+  if (section === "Search") return <DemoClimberSearch feedHref={href("feed")} />;
   return (
     <div className="flex flex-col gap-6">
-      <ProfileHeading name={TOUR_DEMO_CLIMBER.name} since={2026} action={<DemoLog />} />
+      <ProfileHeading
+        name={TOUR_DEMO_CLIMBER.name}
+        since={2026}
+        action={mode === "full" ? <DemoLog /> : undefined}
+      />
       <ProfileSectionNav
         tabs={steps
           .filter(
-            (step, index) => steps.findIndex((entry) => entry.section === step.section) === index,
+            (step, index) =>
+              sections.includes(step.section) &&
+              steps.findIndex((entry) => entry.section === step.section) === index,
           )
+          .sort((a, b) => sections.indexOf(a.section) - sections.indexOf(b.section))
           .map((step) => ({
             label: step.section,
             href: href(step.id),
             current: section === step.section,
+            badge:
+              step.section === "Friends" ? (
+                <FriendRequestBadge count={friendRequest === "pending" ? 1 : 0} />
+              ) : undefined,
           }))}
       />
       {isJournal || section === "Sends" ? (
@@ -100,6 +118,10 @@ export function JournalTourPage({ section, href, steps }: ProductTourPageProps) 
         <section aria-label="Alex's Analytics" className="max-w-4xl">
           <DemoAnalytics />
         </section>
+      ) : section === "Friends" ? (
+        <DemoFriends incoming={friendRequest} onIncomingChange={setFriendRequest} />
+      ) : section === "Feed" ? (
+        <DemoFeed />
       ) : (
         <section
           aria-label="Alex's Account"

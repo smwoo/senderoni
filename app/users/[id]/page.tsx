@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { JournalView } from "@/app/users/[id]/journal-view";
-import { ProfileHeader, getUserById } from "@/app/users/[id]/profile-shell";
+import { ProfileHeader, getUserById, canReadUserJournal } from "@/app/users/[id]/profile-shell";
 import { SendsView } from "@/app/users/[id]/sends-view";
 import { parseJournalFilter } from "@/lib/journal-filter";
 import type { SearchParamsRecord } from "@/lib/search-params";
 import { getSession } from "@/lib/session";
 import { parseUserSendsFilter } from "@/lib/user-sends-filter";
-import { canViewJournal, canViewUser } from "@/lib/user-visibility";
+import { canViewUser } from "@/lib/user-visibility";
 
 type UserPageProps = {
   params: Promise<{ id: string }>;
@@ -30,13 +30,13 @@ export default async function UserPage({ params, searchParams }: UserPageProps) 
 
   if (!user || !canViewUser(user, viewerId)) notFound();
 
-  const journalIsVisible = canViewJournal(user, viewerId);
+  const journalIsVisible = await canReadUserJournal(user.id, viewerId);
 
   return (
     <div className="flex flex-col gap-6">
       <ProfileHeader user={user} viewerId={viewerId} />
       {journalIsVisible ? (
-        <JournalView owner={user} viewerId={viewerId} filter={parseJournalFilter(search)} />
+        <JournalView ownerId={user.id} viewerId={viewerId} filter={parseJournalFilter(search)} />
       ) : (
         <SendsView
           userId={id}

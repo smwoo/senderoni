@@ -1,12 +1,14 @@
-import { clsx } from "clsx";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
+import { ClimberList } from "@/components/climber-list";
+import { ClimberSearchForm } from "@/components/climber-search-form";
 import {
   NavigationPendingProvider,
   NavigationPendingRegion,
 } from "@/components/navigation-pending";
 import { AreaSearchToolbar, ClimbSearchToolbar } from "@/components/search-form";
+import { SearchModeSwitch } from "@/components/search-mode-switch";
 import { AreaSearchResults, ClimbSearchResults } from "@/components/search-results";
 import { AppLink } from "@/components/ui/app-link";
 import { SectionHeading } from "@/components/ui/typography";
@@ -16,6 +18,7 @@ import {
   countSearchClimbs,
   getAreaBreadcrumbs,
   getClimbSendStats,
+  getClimbersPage,
   getUserSentClimbIds,
   searchAreas,
   searchClimbs,
@@ -59,7 +62,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   const db = await getDb();
-  const mode = params.mode === "area" ? "area" : "climb";
+  const mode = params.mode === "area" ? "area" : params.mode === "climber" ? "climber" : "climb";
+
+  if (mode === "climber") return <ClimberSearchView rawName={params.name} />;
 
   if (mode === "area") {
     const name = typeof params.name === "string" ? params.name : "";
@@ -198,7 +203,7 @@ function ModeSwitch({
   name,
   currentSearch,
 }: {
-  mode: "area" | "climb";
+  mode: "area" | "climb" | "climber";
   /** The typed name — the one search param both modes understand, so it
    * carries across a mode switch. */
   name?: string;
@@ -207,7 +212,7 @@ function ModeSwitch({
    * resetting them. */
   currentSearch: string;
 }) {
-  function hrefFor(target: "area" | "climb"): string {
+  function hrefFor(target: "area" | "climb" | "climber"): string {
     if (target === mode) return `/?${currentSearch}`;
     // Cross-mode: the name transfers, everything else is mode-specific
     // (sort, disciplines, grade/rating ranges) and resets to defaults.
@@ -216,31 +221,32 @@ function ModeSwitch({
     return `/?${params.toString()}`;
   }
 
-  function pillClass(active: boolean): string {
-    // The active pill wears HeroUI's segment tokens (the same pair its own
-    // segmented controls use) instead of a hand-picked background.
-    return clsx(
-      "rounded-full px-4 py-1.5 text-sm no-underline",
-      active ? "bg-segment font-semibold text-segment-foreground" : "text-muted",
-    );
-  }
+  return <SearchModeSwitch mode={mode} hrefFor={hrefFor} />;
+}
 
+async function ClimberSearchView({ rawName }: { rawName: SearchParamsRecord[string] }) {
+  const name = typeof rawName === "string" ? rawName.trim().slice(0, 100) : "";
+  const mode = "climber";
+  const db = await getDb();
+  const session = await getSession();
+  const page = await getClimbersPage(db, session?.user.id ?? null, { name });
+  const currentSearch = new URLSearchParams({ mode, name });
   return (
-    <div className="inline-flex gap-1 self-start rounded-full bg-surface-secondary p-1">
-      <AppLink
-        href={hrefFor("climb")}
-        className={pillClass(mode === "climb")}
-        aria-current={mode === "climb" ? "page" : undefined}
-      >
-        Search climbs
-      </AppLink>
-      <AppLink
-        href={hrefFor("area")}
-        className={pillClass(mode === "area")}
-        aria-current={mode === "area" ? "page" : undefined}
-      >
-        Search areas
-      </AppLink>
+    <div className="flex flex-col gap-6">
+      <h1 className="sr-only">Search climbers</h1>
+      <ModeSwitch mode={mode} name={name} currentSearch={currentSearch.toString()} />
+      <p className="text-sm text-muted">
+        Search by name to find a climbing partner and send a friend request.
+      </p>
+      <ClimberSearchForm key={name} name={name} />
+      {session && <AppLink href="/feed">View your feed</AppLink>}
+      <ClimberList
+        viewerId={session?.user.id ?? null}
+        key={`${session?.user.id ?? "anonymous"}:${name}`}
+        initialPage={page}
+        name={name}
+        signedIn={!!session}
+      />
     </div>
   );
 }

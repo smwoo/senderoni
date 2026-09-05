@@ -22,6 +22,7 @@
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
     "test": "vitest run",
+    "test:seed-social": "node --disable-warning=ExperimentalWarning scripts/check-social-seed.ts",
     "seed": "node --disable-warning=ExperimentalWarning scripts/seed.ts",
     "setup": "node scripts/setup.ts",
     "promote-admin": "node --disable-warning=ExperimentalWarning scripts/promote-admin.ts",

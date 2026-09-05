@@ -132,7 +132,7 @@ describe("unknown-date sends", () => {
       ratingSum: 4,
       ratingCount: 1,
     });
-    expect(await queries.getJournalCounts(db, OWNER, OWNER.id, "2026-03")).toMatchObject({
+    expect(await queries.getJournalCounts(db, OWNER.id, OWNER.id, "2026-03")).toMatchObject({
       entries: 0,
       days: 0,
       sentThisMonth: 0,
@@ -176,7 +176,7 @@ describe("unknown-date sends", () => {
         (await createJournalEntry(entryFormData({ sent: "true", entryDate, body: "Repeat." }))).ok,
       ).toBe(true);
     }
-    const entries = await queries.getJournalForClimb(db, OWNER, OWNER.id, HIGHBALL);
+    const entries = await queries.getJournalForClimb(db, OWNER.id, OWNER.id, HIGHBALL);
     expect(entries).toHaveLength(2);
     expect(entries.every((entry) => entry.sent && !entry.isAscent)).toBe(true);
     expect(await queries.getAscentEntryId(db, OWNER.id, HIGHBALL)).toBeUndefined();
@@ -228,7 +228,7 @@ describe("unknown-date sends", () => {
       const [repeat] = await entriesFor("j-user");
       const send = await sendFor("j-user", HIGHBALL);
       expect((await updateSend(send!.id, undatedFormData({ dateSent }))).ok).toBe(true);
-      const entries = await queries.getJournalForClimb(db, OWNER, OWNER.id, HIGHBALL);
+      const entries = await queries.getJournalForClimb(db, OWNER.id, OWNER.id, HIGHBALL);
       const ascent = entries.find((entry) => entry.isAscent);
       expect(ascent).toMatchObject({ entryDate: dateSent, body: "Original ascent." });
       expect(ascent?.id).not.toBe(repeat.id);

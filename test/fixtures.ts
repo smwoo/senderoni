@@ -1,7 +1,19 @@
 import { eq } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
-import { areas, climbs, user, sends, journalEntries } from "@/db/schema";
+import { areas, climbs, user, sends, journalEntries, friendships } from "@/db/schema";
+import { friendshipPair } from "@/lib/friendships";
+
+export async function seedFixtureFriendship(
+  db: Database,
+  requester: string,
+  recipient: string,
+  status: "pending" | "accepted" = "accepted",
+) {
+  await db
+    .insert(friendships)
+    .values({ ...friendshipPair(requester, recipient), requestedBy: requester, status });
+}
 
 /**
  * A small tree exercising: a root with no ancestors, a two-level-deep

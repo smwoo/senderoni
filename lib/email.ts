@@ -22,12 +22,10 @@ async function getBaseUrl() {
   return env.BETTER_AUTH_URL.replace(/\/$/, "");
 }
 
-/** The only user-controlled string this file puts in an HTML body.
+/** Escape display names in HTML greetings.
  *
  * The two auth helpers below interpolate a better-auth-generated URL and
- * nothing else, and sendContactEmail sidesteps the problem entirely by using
- * `text`. A display name can't do either: it's whatever the user typed at
- * sign-up, and it belongs in a greeting. */
+ * nothing else. Contact, moderation, and friend request emails use plain text. */
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -105,6 +103,32 @@ export async function sendWelcomeEmail(to: string, name: string) {
   });
 
   if (error) throw new Error(`Resend rejected the welcome email: ${error.message}`);
+}
+
+/** Names stay in plain text. The requests page requires sign-in and exposes no
+ * journal content; it also works when the requester has a private profile. */
+export async function sendFriendRequestEmail(to: string, requesterName: string) {
+  const resend = await getResend();
+  const base = await getBaseUrl();
+  const text = [
+    `${requesterName} sent you a friend request on Betabook.`,
+    "",
+    "Accept or decline the request:",
+    `${base}/friends?view=requests`,
+  ].join("\n");
+
+  if (!resend) {
+    console.log(`[dev] friend request email for ${to}:\n${text}`);
+    return;
+  }
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "New friend request on Betabook",
+    text,
+  });
+  if (error) throw new Error(`Resend rejected the friend request email: ${error.message}`);
 }
 
 /** A message from the public /contact form.

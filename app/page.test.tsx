@@ -64,6 +64,9 @@ vi.mock("next/link", () => ({
   default: () => null,
 }));
 
+vi.mock("@/components/climber-list", () => ({ ClimberList: () => null }));
+vi.mock("@/components/climber-search-form", () => ({ ClimberSearchForm: () => null }));
+
 vi.mock("@/components/ui/app-link", () => ({
   AppLink: () => null,
 }));

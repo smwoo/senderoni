@@ -1,4 +1,6 @@
 # Copy to `.dev.vars` for local development.
+# Rate-limit bindings (including FRIENDSHIP_RATE_LIMITER) are configured in
+# wrangler.jsonc and need no secret value here.
 #
 # @opennextjs/cloudflare layers this file over the `vars` block in
 # wrangler.jsonc. Without it BETTER_AUTH_URL falls back to the production
@@ -10,8 +12,8 @@ BETTER_AUTH_URL=http://localhost:3000
 # invalidates existing local sessions. Never use this value in production.
 BETTER_AUTH_SECRET=local-development-only-secret-not-for-production
 
-# Empty means "no Resend" to lib/email.ts, which then logs verification and
-# reset links to the console. Keep this key aligned with cloudflare-env.d.ts.
+# Empty means "no Resend" to lib/email.ts, which logs emails (including friend
+# requests) to the console. Keep this key aligned with cloudflare-env.d.ts.
 RESEND_API_KEY=
 
 # Google OAuth (optional for local dev, https://console.cloud.google.com/apis/credentials)
