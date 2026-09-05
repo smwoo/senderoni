@@ -13,16 +13,17 @@ const TONE_CLASSNAME = {
 type SkeletonProps = {
   className?: string;
   tone?: keyof typeof TONE_CLASSNAME;
-  /** Corner radius utility. A prop rather than part of `className` because
-   * Tailwind emits `rounded-md` after `rounded-full`/`rounded-lg`, so a
-   * radius passed alongside a default one silently lost. */
+  /** Corner radius utility — one of the three roles, matching whatever the
+   * placeholder stands in for. A prop rather than part of `className`
+   * because Tailwind's emission order, not source order, decides which of
+   * two radius classes wins, so one passed alongside the default was lost. */
   rounded?: string;
 };
 
 /** Base pulsing placeholder block — size it via className (h-*, w-*). The
  * app's only skeleton; the header controls use it too, so every loading
  * surface pulses the same way. */
-export function Skeleton({ className, tone = "base", rounded = "rounded-md" }: SkeletonProps) {
+export function Skeleton({ className, tone = "base", rounded = "rounded-inset" }: SkeletonProps) {
   return (
     <div
       aria-hidden="true"

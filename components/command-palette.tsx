@@ -112,7 +112,7 @@ export function SearchTrigger() {
       onClick={() => openSearch?.()}
       aria-label="Search"
       aria-keyshortcuts={keys?.ariaPalette}
-      className="flex cursor-pointer items-center gap-2 rounded-lg border border-border px-2 py-1.5 text-muted transition-colors hover:text-foreground focus-visible:status-focused"
+      className="flex cursor-pointer items-center gap-2 rounded-inset border border-border px-2 py-1.5 text-muted transition-colors hover:text-foreground focus-visible:status-focused"
     >
       <Search className="size-4" />
       <span className="hidden text-sm sm:inline">Search</span>

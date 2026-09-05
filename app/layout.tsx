@@ -117,7 +117,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <a
           href="#main"
           // oxlint-disable-next-line tailwindcss/no-conflicting-classes
-          className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-inset focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
         >
           Skip to content
         </a>

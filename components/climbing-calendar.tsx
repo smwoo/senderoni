@@ -104,7 +104,7 @@ export function ClimbingCalendar({
                 <span
                   key={day.iso}
                   title={`${day.count > 0 ? formatCount(day.count, unit) : `No ${unit}s`} · ${formatDate(day.iso)}`}
-                  className="aspect-square w-full rounded-[2px] bg-foreground/10"
+                  className="aspect-square w-full rounded-xs bg-foreground/10"
                   style={
                     day.count > 0
                       ? { backgroundColor: hue, opacity: LEVEL_OPACITY[level(day.count)] }
@@ -119,7 +119,7 @@ export function ClimbingCalendar({
             {LEVEL_OPACITY.map((opacity) => (
               <span
                 key={opacity}
-                className="size-[10px] rounded-[2px] bg-foreground/10"
+                className="size-[10px] rounded-xs bg-foreground/10"
                 style={opacity > 0 ? { backgroundColor: hue, opacity } : undefined}
               />
             ))}

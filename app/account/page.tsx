@@ -145,7 +145,7 @@ export default async function AccountPage() {
         )}
       </div>
 
-      <section className="flex flex-col gap-4 rounded-xl border border-danger/30 bg-danger/5 p-6">
+      <section className="flex flex-col gap-4 rounded-surface border border-danger/30 bg-danger/5 p-6">
         <div className="flex flex-col gap-1">
           <SectionHeading>Danger zone</SectionHeading>
           <p className="text-sm text-muted">

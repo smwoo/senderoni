@@ -15,7 +15,7 @@ export function SubareaRail({ subareas }: { subareas: { id: number; name: string
           <li key={subarea.id}>
             <AppLink
               href={areaHref(subarea.id, subarea.name)}
-              className="block min-w-0 truncate rounded-md px-2 py-1.5 text-sm text-foreground no-underline transition-colors hover:bg-surface-secondary/60"
+              className="block min-w-0 truncate rounded-inset px-2 py-1.5 text-sm text-foreground no-underline transition-colors hover:bg-surface-secondary/60"
             >
               {subarea.name}
             </AppLink>

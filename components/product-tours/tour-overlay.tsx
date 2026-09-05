@@ -57,7 +57,7 @@ export function TourOverlay({
       {highlight && (
         <div
           aria-hidden
-          className="pointer-events-none fixed z-20 overflow-hidden rounded-lg"
+          className="pointer-events-none fixed z-20 overflow-hidden rounded-inset"
           style={{
             left: highlight.viewport.left,
             top: highlight.viewport.top,
@@ -66,7 +66,7 @@ export function TourOverlay({
           }}
         >
           <div
-            className="absolute rounded-xl border-2 border-accent shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]"
+            className="absolute rounded-inset border-2 border-accent shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]"
             style={{
               left: highlight.rect.left - highlight.viewport.left,
               top: highlight.rect.top - highlight.viewport.top,
@@ -79,7 +79,7 @@ export function TourOverlay({
       <div
         role="region"
         aria-label="Product tour"
-        className={`${styles.guide} ${showSteps ? styles.chooser : ""} flex min-h-40 shrink-0 flex-col gap-3 rounded-xl border border-foreground/30 bg-surface p-3 text-foreground`}
+        className={`${styles.guide} ${showSteps ? styles.chooser : ""} flex min-h-40 shrink-0 flex-col gap-3 rounded-surface border border-foreground/30 bg-surface p-3 text-foreground`}
       >
         <div className="flex shrink-0 items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
@@ -110,7 +110,7 @@ export function TourOverlay({
                   key={entry.id}
                   href={href(entry.id)}
                   aria-current={entry.id === step.id ? "step" : undefined}
-                  className="rounded-md px-2 py-2 text-sm text-foreground hover:bg-surface-secondary"
+                  className="rounded-inset px-2 py-2 text-sm text-foreground hover:bg-surface-secondary"
                 >
                   {i + 1}. {entry.title}
                 </AppLink>

@@ -221,7 +221,7 @@ export function JournalEntryForm({
       </FormSection>
 
       {!existingEntry && (
-        <div className="flex flex-col gap-1 rounded-lg bg-surface-secondary px-4 py-3">
+        <div className="flex flex-col gap-1 rounded-inset bg-surface-secondary px-4 py-3">
           <p className="text-sm font-medium text-foreground">{summary.headline}</p>
           {summary.consequence && <p className="text-sm text-muted">{summary.consequence}</p>}
           {isUndatedSend && (

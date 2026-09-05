@@ -90,7 +90,7 @@ function RatingPicker({
           onMouseEnter={() => setHovered(n)}
           onFocus={() => setHovered(n)}
           onBlur={() => setHovered(null)}
-          className="cursor-pointer rounded-md p-1 transition-colors focus-visible:status-focused"
+          className="cursor-pointer rounded-inset p-1 transition-colors focus-visible:status-focused"
         >
           <Star
             className={clsx(

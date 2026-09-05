@@ -22,7 +22,7 @@ function ChosenStrip({
   const climb = choice.kind === "session" ? choice.climb : undefined;
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg bg-surface-secondary px-4 py-3">
+    <div className="flex items-center justify-between gap-3 rounded-inset bg-surface-secondary px-4 py-3">
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-foreground">
           {climb ? climb.name : "Training"}

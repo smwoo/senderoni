@@ -709,7 +709,7 @@ export function ImportWizard({ profileHref }: { profileHref: string }) {
             onDragLeave={() => setDragging(false)}
             onDrop={handleDrop}
             className={clsx(
-              "flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-dashed px-6 py-10 text-center transition-colors focus-visible:status-focused",
+              "flex cursor-pointer flex-col items-center gap-3 rounded-surface border border-dashed px-6 py-10 text-center transition-colors focus-visible:status-focused",
               dragging ? "border-accent bg-surface" : "border-border hover:bg-surface/60",
             )}
           >
@@ -729,7 +729,7 @@ export function ImportWizard({ profileHref }: { profileHref: string }) {
               Which column holds each field? {formatCount(parsedCsv.rows.length, "row")} found.
             </p>
             {source !== "unknown" && (
-              <div className="rounded-lg border border-border bg-surface px-4 py-3">
+              <div className="rounded-inset border border-border bg-surface px-4 py-3">
                 <p className="text-sm font-medium">Looks like a {IMPORT_SOURCE_LABELS[source]}</p>
                 <p className="mt-1 text-xs text-muted">
                   Columns were mapped automatically. Check them below. {SOURCE_NOTES[source]}

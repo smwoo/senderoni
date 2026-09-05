@@ -16,7 +16,7 @@ export function EmptyState({ message, cta, className }: EmptyStateProps) {
   return (
     <div
       className={clsx(
-        "flex flex-col items-center gap-3 rounded-lg border border-dashed border-border px-6 py-10 text-center",
+        "flex flex-col items-center gap-3 rounded-surface border border-dashed border-border px-6 py-10 text-center",
         className,
       )}
     >

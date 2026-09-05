@@ -79,7 +79,7 @@ function ClimbRow({
     <button
       type="button"
       onClick={onPick}
-      className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-2.5 text-left transition-colors hover:bg-surface-secondary/60 focus-visible:status-focused"
+      className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-inset px-3 py-2.5 text-left transition-colors hover:bg-surface-secondary/60 focus-visible:status-focused"
     >
       {detail}
       {sent && (

@@ -32,9 +32,9 @@ export default function Loading() {
       <div className="flex flex-col gap-2">
         <Skeleton className="h-6 w-28" />
         <div className="flex flex-wrap gap-2">
-          <Skeleton className="h-8 w-24" rounded="rounded-lg" />
-          <Skeleton className="h-8 w-32" rounded="rounded-lg" />
-          <Skeleton className="h-8 w-20" rounded="rounded-lg" />
+          <Skeleton className="h-8 w-24" rounded="rounded-inset" />
+          <Skeleton className="h-8 w-32" rounded="rounded-inset" />
+          <Skeleton className="h-8 w-20" rounded="rounded-inset" />
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export default function Loading() {
           <SkeletonListRows rows={8} />
         </div>
         <div className="order-1 lg:order-2 lg:w-80 lg:shrink-0">
-          <Skeleton className="h-8 w-full lg:h-96" rounded="rounded-xl" />
+          <Skeleton className="h-8 w-full lg:h-96" rounded="rounded-surface" />
         </div>
       </div>
     </div>

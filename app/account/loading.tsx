@@ -13,7 +13,7 @@ export default function Loading() {
             <Skeleton tone="raised" className="h-8 w-48 max-w-full" />
             <Skeleton tone="raised" className="h-4 w-56 max-w-full" />
           </div>
-          <Skeleton tone="raised" className="hidden h-9 w-32 sm:block" rounded="rounded-lg" />
+          <Skeleton tone="raised" className="hidden h-9 w-32 sm:block" rounded="rounded-full" />
         </div>
       </div>
 
@@ -22,15 +22,15 @@ export default function Loading() {
           <div key={index} className={`flex flex-col gap-3 ${cardClass("md")}`}>
             <Skeleton tone="raised" className="h-5 w-28" />
             <Skeleton tone="raised" className="h-4 w-full" />
-            <Skeleton tone="raised" className="h-9 w-32" rounded="rounded-lg" />
+            <Skeleton tone="raised" className="h-9 w-32" rounded="rounded-full" />
           </div>
         ))}
       </div>
 
-      <div className="flex flex-col gap-3 rounded-xl border border-separator p-6">
+      <div className="flex flex-col gap-3 rounded-surface border border-separator p-6">
         <Skeleton className="h-5 w-28" />
         <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-9 w-32" rounded="rounded-lg" />
+        <Skeleton className="h-9 w-32" rounded="rounded-full" />
       </div>
     </div>
   );

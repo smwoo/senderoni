@@ -80,7 +80,7 @@ export function LoggedGradeHistogram({ type, rows }: { type: ClimbType; rows: Lo
                         />
                       ))}
                     </div>
-                    <span className="pointer-events-none absolute -top-7 left-0 z-10 hidden rounded-md border border-separator bg-surface px-2 py-1 text-[11px] whitespace-nowrap shadow-sm group-hover:block">
+                    <span className="pointer-events-none absolute -top-7 left-0 z-10 hidden rounded-inset border border-separator bg-surface px-2 py-1 text-[11px] whitespace-nowrap shadow-sm group-hover:block">
                       {breakdown}
                     </span>
                   </div>

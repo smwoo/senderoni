@@ -187,6 +187,16 @@
   --color-palette-support: var(--palette-support);
   --color-palette-accent: var(--palette-accent);
   --color-palette-paper: var(--palette-paper);
+
+  /* Three radius roles and no more: surface holds a composition, inset sits
+     on one, pill is rounded-full (HeroUI's Button clamps to a pill at every
+     size). Both values are HeroUI's own tokens — Card/Modal/Popover use
+     min(32px, --radius-3xl), every text control uses --radius-field — so a
+     hand-rolled panel can't drift from a Select popover, and retuning
+     --radius moves both. Data marks (histogram bars, calendar cells) aren't
+     objects and take neither; they stay on a bare rounded-xs. */
+  --radius-surface: min(32px, var(--radius-3xl));
+  --radius-inset: var(--radius-field);
 }
 
 @layer base {

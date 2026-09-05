@@ -140,7 +140,7 @@ function CandidateRow({
       onClick={onPick}
       aria-pressed={current}
       className={clsx(
-        "flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-2 text-left transition-colors hover:bg-surface/60 focus-visible:status-focused",
+        "flex w-full cursor-pointer items-center justify-between gap-3 rounded-inset px-3 py-2 text-left transition-colors hover:bg-surface/60 focus-visible:status-focused",
         current && "bg-surface",
       )}
     >
@@ -171,7 +171,7 @@ function CandidateList({
   onPick: (climb: ClimbCandidate) => void;
 }) {
   return (
-    <div className="flex max-h-80 flex-col divide-y divide-separator overflow-y-auto rounded-lg border border-border">
+    <div className="flex max-h-80 flex-col divide-y divide-separator overflow-y-auto rounded-surface border border-border">
       {candidates.map((climb) => (
         <CandidateRow
           key={climb.id}
@@ -188,7 +188,7 @@ function CandidateList({
 /** The chosen climb, the way a send row will show it. */
 function ClimbLine({ climb, rowClimbName }: { climb: ClimbCandidate; rowClimbName: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg bg-surface px-3 py-2">
+    <div className="flex items-center justify-between gap-3 rounded-inset bg-surface px-3 py-2">
       <ClimbPlace climb={climb} rowClimbName={rowClimbName} />
       <span className="flex shrink-0 items-center gap-2">
         <DisciplineChip type={climb.type} />

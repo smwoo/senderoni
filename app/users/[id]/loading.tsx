@@ -14,7 +14,7 @@ export default function Loading() {
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
         <div className="order-1 flex flex-col gap-4 lg:order-2 lg:w-80 lg:shrink-0">
-          <Skeleton className="h-8 w-full lg:h-64" rounded="rounded-xl" />
+          <Skeleton className="h-8 w-full lg:h-64" rounded="rounded-surface" />
           <SkeletonStatCard stats={3} />
         </div>
 

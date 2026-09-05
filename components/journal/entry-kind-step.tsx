@@ -69,7 +69,7 @@ export function EntryKindStep({
             onClick={() =>
               choice.id === "session" ? setChoosingClimb(true) : onChoose({ kind: "training" })
             }
-            className="cursor-pointer rounded-xl border border-border px-4 py-4 text-left transition-colors hover:bg-surface-secondary/60 focus-visible:status-focused"
+            className="cursor-pointer rounded-inset border border-border px-4 py-4 text-left transition-colors hover:bg-surface-secondary/60 focus-visible:status-focused"
           >
             <span className="block font-medium text-foreground">{choice.label}</span>
             <span className="mt-1 block text-sm text-muted">{choice.description}</span>

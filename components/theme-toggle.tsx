@@ -24,8 +24,9 @@ export function ThemeSwitch() {
   const { theme, setTheme } = useTheme("system");
 
   if (!mounted) {
-    // Same footprint as the icon button below so the header doesn't shift.
-    return <Skeleton rounded="rounded-lg" className="size-9" />;
+    // Same footprint and shape as the icon button below — HeroUI clamps a
+    // button's radius to a pill — so the header neither shifts nor pops.
+    return <Skeleton rounded="rounded-full" className="size-9" />;
   }
 
   const current: ThemeName = THEME_CYCLE.includes(theme as ThemeName)

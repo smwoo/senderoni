@@ -34,7 +34,7 @@ export function WizardSteps({
               <button
                 type="button"
                 onClick={() => onJump(station.key)}
-                className="cursor-pointer rounded-sm px-1.5 py-0.5 text-success-soft-foreground hover:text-foreground focus-visible:status-focused"
+                className="cursor-pointer rounded-inset px-1.5 py-0.5 text-success-soft-foreground hover:text-foreground focus-visible:status-focused"
               >
                 {label}
               </button>
@@ -43,7 +43,7 @@ export function WizardSteps({
                 aria-current={state === "active" ? "step" : undefined}
                 className={
                   state === "active"
-                    ? "rounded-sm border border-border bg-surface px-1.5 py-0.5 font-medium text-foreground"
+                    ? "rounded-inset border border-border bg-surface px-1.5 py-0.5 font-medium text-foreground"
                     : state === "done"
                       ? "px-1.5 py-0.5 text-success-soft-foreground"
                       : "px-1.5 py-0.5 text-muted"

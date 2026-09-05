@@ -282,7 +282,7 @@ export function DemoAccount() {
           onJournalChange={setPrivateJournal}
         />
       </div>
-      <div role="status" className="rounded-lg bg-surface-secondary p-4 text-sm">
+      <div role="status" className="rounded-inset bg-surface-secondary p-4 text-sm">
         <p className="font-medium">What a visitor can see</p>
         <p className="mt-1">
           {isPrivate

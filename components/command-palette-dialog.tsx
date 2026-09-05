@@ -289,7 +289,7 @@ function PaletteBody({
                     onMouseMove={() => setActiveKey(entry.key)}
                     onClick={() => onNavigate(entry.href)}
                     className={clsx(
-                      "cursor-pointer rounded-lg px-2 py-2 text-sm",
+                      "cursor-pointer rounded-inset px-2 py-2 text-sm",
                       isActive && "bg-surface-secondary",
                     )}
                   >
