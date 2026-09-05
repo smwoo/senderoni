@@ -21,11 +21,7 @@ vi.mock("@/components/journal", () => ({
   OpenProjectList: mocks.OpenProjectList,
 }));
 
-const owner = {
-  id: "journal-owner",
-  isPrivate: false,
-  journalVisibility: "private" as const,
-};
+const ownerId = "journal-owner";
 
 describe("ProjectsView", () => {
   it.each([0, 3, 100, 101])(
@@ -34,7 +30,7 @@ describe("ProjectsView", () => {
       const projects = Array.from({ length: count }, (_, index) => ({ climbId: index + 1 }));
       mocks.getOpenProjects.mockResolvedValue(projects);
 
-      const result = (await ProjectsView({ owner })) as ReactElement<{ children: ReactNode }>;
+      const result = (await ProjectsView({ ownerId })) as ReactElement<{ children: ReactNode }>;
       const children = result.props.children as ReactNode[];
       const list = children.find(
         (child) => isValidElement(child) && child.type === mocks.OpenProjectList,

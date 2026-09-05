@@ -16,6 +16,7 @@ describe("revalidateSendSurfaces", () => {
 
     expect(revalidatePath.mock.calls.map(([path]) => path)).toEqual([
       "/",
+      "/feed",
       "/users/user-1",
       "/users/user-1/sends",
       "/users/user-1/projects",
@@ -34,6 +35,7 @@ describe("revalidateSendSurfaces", () => {
 
     expect(revalidatePath.mock.calls.map(([path]) => path)).toEqual([
       "/",
+      "/feed",
       "/users/user-1",
       "/users/user-1/sends",
       "/users/user-1/projects",
@@ -49,6 +51,7 @@ describe("revalidateJournalSurfaces", () => {
     revalidateJournalSurfaces({ userId: "user-1", climbIds: [12, 12] });
 
     expect(revalidatePath.mock.calls.map(([path]) => path)).toEqual([
+      "/feed",
       "/users/user-1",
       "/users/user-1/journal",
       "/users/user-1/projects",

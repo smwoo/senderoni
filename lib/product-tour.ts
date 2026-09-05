@@ -4,14 +4,13 @@ import { ActionError } from "@/lib/action-result";
 export const PRODUCT_TOURS = [
   {
     id: "journal",
-    version: 1,
-    name: "Logging sessions and training",
+    version: 2,
+    name: "Journal, friends and sharing",
     title: "Keep a climbing journal",
-    description:
-      "Log outdoor sessions and training, including days you didn't send. Take a tour or add an entry.",
-    returningTitle: "Logging now includes sessions and training",
+    description: "Learn to log sessions, add friends, and choose who can read your notes.",
+    returningTitle: "Share your journal with friends",
     returningDescription:
-      "You can now log project attempts, repeats, and training. Take a tour to see how it works.",
+      "Add your climbing partners as friends to see what they've been climbing. Choose who can read your journal and send notes.",
   },
 ] as const;
 

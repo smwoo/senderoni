@@ -9,7 +9,25 @@ Tours run at `/tutorial/[tourId]/[stepId]` inside the app shell. The page uses A
 3. Render the section in the feature's page component. `ProductTourPageProps` supplies its section, the active `steps`, and `href(stepId)` for links that preserve the replay destination. Reuse the app's layouts and display components. Keep demo controls local and never pass sample IDs to real links or mutation components.
 4. For a separate tour, register its metadata in `lib/product-tour.ts`, steps in `PRODUCT_TOUR_STEPS`, and a lazy page loader in `components/product-tours/registry.ts`. The existing route layout handles the rest. An optional quick action beside the invitation belongs in `quick-actions.tsx`.
 
-The Journal tour covers Log, journal filters, Sends sorting, project history, Analytics, and privacy. The sample Log control is a visual reference for the first step, with no click action or popover. Users can log real entries from the invitation's ordinary Log button or their own Journal after leaving the tour.
+The Journal tour covers Log, journal filters, Sends sorting, project history, Analytics, climber discovery, friend requests, Feed, and privacy. The sample Log control is a visual reference in the full tour, with no click action or popover. First-time invitations include an ordinary Log button. Update invitations and update demos omit both Log controls.
+
+Demo profile tabs use the app's order: Journal, Sends, Feed, Friends, Projects,
+Analytics, then the tour-only Account section. Lesson order remains in the catalog.
+Discovery uses a separate Search surface, with the same Search climbs / Search
+areas / Search climbers selector and result-row components as the app. Search is
+not a profile tab. The lesson starts in Search climbers; category changes, form
+submission, sample results, and friend requests stay local. Its View your feed link
+opens the feed lesson while preserving full/update mode and the exit destination.
+Next, Back, and the lesson chooser connect Search with the profile lessons.
+The Friends lesson uses the shared section navigation and request badge for its
+All friends / Requests controls. Demo selections use local callbacks, with no URLs
+or writes. Accepting or declining the sample request clears both sample badges;
+the signed-in account's real count remains separate.
+
+The sample request buttons use `FriendshipActionButton`, including the same
+confirmation dialogs as real cancellation, decline, and removal. Their callbacks
+only change demo state. The real account avatar uses a dot for incoming requests,
+and Account links to the Requests list; My Journal has no notification badge.
 
 ## Navigation and overlays
 
@@ -23,13 +41,15 @@ Exit returns to Account for Account replay and otherwise to the user's Journal. 
 
 ## Sample account
 
-`lib/product-tour-demo.ts` defines Alex Morgan's browser-only fixtures. Journal entries are the source for sends, projects, and analytics; analytics use the production calculation. No database demo account is needed. Negative sample IDs must never enter entity links, real forms, or actions. The only tour mutation is saving the authenticated user's dismissal/completion status. `PrivacyFields` is shared with Account: the tutorial passes local state callbacks, while `PrivacyControls` owns the real saving and error handling. Keep the shared fields free of actions.
+`lib/product-tour-demo.ts` defines Alex Morgan's browser-only fixtures. Journal entries are the source for sends, projects, and analytics; analytics use the production calculation. No database demo account is needed. Negative sample IDs must never enter entity links, real forms, or actions. The only tour mutation is saving the authenticated user's dismissal/completion status. `PrivacyFields` is shared with Account: its three journal audiences and profile switch use local state callbacks in the tutorial, while `PrivacyControls` owns real saving and error handling. The privacy lesson explains mutual friendships and the journal audience for send notes. Keep the shared fields free of actions.
 
 ## Progress and replay
 
 `user_product_tours` stores a version and dismissed/completed status for each user and tour. Existing atomic updates prevent stale tabs from downgrading completed or newer progress. An invitation appears on the owner's Journal when that version has not been dismissed or completed. Account always offers replay; replay does not clear saved progress. Closing a tour does not mark it complete. Loading and completion failures have retry controls.
 
-To add lessons after release, bump the tour's `version` and set each new step's `introducedInVersion` to that version. For a substantial change to an existing lesson, set its `updatedInVersion` to the new version while keeping its ID and introduction version. Copy edits do not need a bump. This unreleased tour and its existing steps remain on version 1.
+To add lessons after release, bump the tour's `version` and set each new step's `introducedInVersion` to that version. For a substantial change to an existing lesson, set its `updatedInVersion` to the new version while keeping its ID and introduction version. Copy edits do not need a bump.
+
+The journal tour is currently version 2. Version 1 introduced Journal, Sends, Projects, Analytics, and Account privacy. Version 2 adds `find-climbers`, `friend-requests`, and `feed`, and substantially updates the existing `account` lesson for the Friends journal audience. Older completed/dismissed progress produces four update lessons; first-time visits and Account replay include all nine. `climber-search-preview.tsx` and `social-tour-previews.tsx` use local search, request, acceptance, removal, and feed filter state with fictional people from `lib/product-tour-demo.ts`. They use shared display components without linking sample profiles or calling actions.
 
 An account that completed or dismissed an older version gets a **What's new** invitation containing only lessons introduced or substantially updated since that saved version. Users who missed several releases see all the additions in catalog order. First-time users see the full tour, including existing accounts that have no tour progress. A version bump without any changed lessons does not produce an invitation.
 

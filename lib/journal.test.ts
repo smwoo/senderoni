@@ -195,13 +195,13 @@ describe("validateJournalInput", () => {
 
 describe("parseJournalVisibility", () => {
   it("accepts every stored value", () => {
-    for (const visibility of ["private", "public"] satisfies JournalVisibility[]) {
+    for (const visibility of ["private", "friends", "public"] satisfies JournalVisibility[]) {
       expect(parseJournalVisibility(visibility)).toBe(visibility);
     }
   });
 
   it("rejects anything else", () => {
-    expect(() => parseJournalVisibility("friends")).toThrow(ActionError);
+    expect(() => parseJournalVisibility("invalid")).toThrow(ActionError);
     expect(() => parseJournalVisibility(null)).toThrow(ActionError);
   });
 });

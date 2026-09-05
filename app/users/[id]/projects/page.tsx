@@ -25,7 +25,7 @@ export default async function UserProjectsPage({ params }: UserProjectsPageProps
   return (
     <div className="flex flex-col gap-6">
       <ProfileHeader user={user} viewerId={session.user.id} />
-      <ProjectsView owner={user} />
+      <ProjectsView ownerId={user.id} />
     </div>
   );
 }

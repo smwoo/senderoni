@@ -32,7 +32,9 @@ export const user = sqliteTable("user", {
   // `sends` only, with no join to `user`, so a private user's ascents keep
   // counting toward a climb's rating and suggested grade exactly as before.
   isPrivate: integer("is_private", { mode: "boolean" }).default(false).notNull(),
-  journalVisibility: text("journal_visibility", { enum: ["private", "public"] })
+  journalVisibility: text("journal_visibility", {
+    enum: ["private", "friends", "public"],
+  })
     .default("private")
     .notNull(),
   productTourReturning: integer("product_tour_returning", { mode: "boolean" })

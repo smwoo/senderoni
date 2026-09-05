@@ -16,6 +16,8 @@ import { getSession } from "@/lib/session";
 import { parseUserSendsFilter } from "@/lib/user-sends-filter";
 import { canViewUser } from "@/lib/user-visibility";
 
+const headers = { "Cache-Control": "private, no-store" };
+
 type RouteParams = { params: Promise<{ id: string }> };
 
 /** Incremental "load more" for a user's send history — the initial page is
@@ -36,22 +38,32 @@ export async function GET(request: Request, { params }: RouteParams) {
   // its existence isn't leaked either.
   const user = await getUser(db, userId);
   if (!user || !canViewUser(user, session?.user.id ?? null)) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: "User not found" }, { status: 404, headers });
   }
 
   if (safeOffset === null) {
-    return NextResponse.json({ sends: [], hasMore: false, areaBreadcrumbs: {} });
+    return NextResponse.json({ sends: [], hasMore: false, areaBreadcrumbs: {} }, { headers });
   }
 
-  const page = await getSendsForUserPage(db, userId, filter, safeOffset);
+  const page = await getSendsForUserPage(
+    db,
+    userId,
+    filter,
+    safeOffset,
+    undefined,
+    session?.user.id ?? null,
+  );
   const areaBreadcrumbs = await getAreaBreadcrumbs(
     db,
     page.sends.map((send) => send.areaId),
   );
 
-  return NextResponse.json({
-    ...page,
-    hasMore: page.hasMore && !offsetReachesPaginationLimit(safeOffset, USER_SENDS_PAGE_SIZE),
-    areaBreadcrumbs,
-  });
+  return NextResponse.json(
+    {
+      ...page,
+      hasMore: page.hasMore && !offsetReachesPaginationLimit(safeOffset, USER_SENDS_PAGE_SIZE),
+      areaBreadcrumbs,
+    },
+    { headers },
+  );
 }

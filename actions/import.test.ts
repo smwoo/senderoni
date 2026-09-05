@@ -251,6 +251,7 @@ describe("importSends revalidation", () => {
     expect(new Set(paths)).toEqual(
       new Set([
         "/",
+        "/feed",
         "/users/reval-user",
         "/users/reval-user/journal",
         "/users/reval-user/sends",

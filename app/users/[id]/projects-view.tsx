@@ -1,11 +1,11 @@
 import { OpenProjectList } from "@/components/journal";
 import { SectionHeading } from "@/components/ui/typography";
 import { getDb } from "@/db/client";
-import { getOpenProjects, OPEN_PROJECT_PAGE_SIZE, type JournalOwner } from "@/db/queries";
+import { getOpenProjects, OPEN_PROJECT_PAGE_SIZE } from "@/db/queries";
 import { formatCount } from "@/lib/format";
 
-export async function ProjectsView({ owner }: { owner: JournalOwner }) {
-  const rows = await getOpenProjects(await getDb(), owner, owner.id, OPEN_PROJECT_PAGE_SIZE + 1);
+export async function ProjectsView({ ownerId }: { ownerId: string }) {
+  const rows = await getOpenProjects(await getDb(), ownerId, ownerId, OPEN_PROJECT_PAGE_SIZE + 1);
   const hasMore = rows.length > OPEN_PROJECT_PAGE_SIZE;
   const projects = hasMore ? rows.slice(0, OPEN_PROJECT_PAGE_SIZE) : rows;
 

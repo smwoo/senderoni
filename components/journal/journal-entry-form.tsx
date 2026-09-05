@@ -213,8 +213,7 @@ export function JournalEntryForm({
 
         {(isAscent || existingEntry?.isAscent) && (
           <p className="text-xs text-muted">
-            This note also appears on your send and follows your profile privacy settings, even if
-            your journal is private.
+            This note also appears on your send and uses your journal privacy setting.
           </p>
         )}
         {!isUndatedSend && <TagInput value={tags} onChange={setTags} />}
@@ -244,7 +243,8 @@ export function JournalEntryForm({
       </Button>
 
       <p className="text-center text-xs text-muted">
-        Journal visibility is managed in <AppLink href="/account">Account settings</AppLink>.
+        Choose who can read your journal and notes in{" "}
+        <AppLink href="/account">Account settings</AppLink>.
       </p>
     </form>
   );

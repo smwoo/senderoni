@@ -153,6 +153,7 @@ export function TourExperience({
             <Page
               key={steps[index].section}
               section={steps[index].section}
+              mode={navigation.mode}
               href={href}
               steps={steps}
             />

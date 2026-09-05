@@ -30,7 +30,6 @@ import {
   getClimbSendSummary,
   getJournalForClimb,
   getSendsForClimb,
-  getUser,
   getUserSendForClimb,
 } from "@/db/queries";
 import { buildLoggedGradeRows } from "@/lib/grade-histogram";
@@ -118,9 +117,8 @@ export default async function ClimbPage({ params, searchParams }: ClimbPageProps
   // Stats come from whole-history aggregates and the list from a paginated
   // query — a popular climb's full send history never ships in the RSC
   // payload (ClimbSendList "load more"-fetches the rest on demand).
-  const [area, journalOwner, userSend, sendsPage, summary] = await Promise.all([
+  const [area, userSend, sendsPage, summary] = await Promise.all([
     getAreaById(climb.areaId),
-    session ? getUser(db, session.user.id) : null,
     session ? getUserSendForClimb(db, session.user.id, climb.id).then((s) => s ?? null) : null,
     getSendsForClimb(db, climb.id, 0, undefined, session?.user.id ?? null),
     getClimbSendSummary(db, climb.id),
@@ -129,8 +127,8 @@ export default async function ClimbPage({ params, searchParams }: ClimbPageProps
 
   const [ancestors, journalEntries] = await Promise.all([
     getAreaAncestors(area),
-    journalOwner && session
-      ? getJournalForClimb(db, journalOwner, session.user.id, climb.id)
+    session
+      ? getJournalForClimb(db, session.user.id, session.user.id, climb.id)
       : Promise.resolve([]),
   ]);
 

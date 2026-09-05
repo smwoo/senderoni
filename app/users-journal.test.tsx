@@ -1,9 +1,10 @@
 import type { ReactElement, ReactNode } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import UserPage from "@/app/users/[id]/page";
 import UserProjectsPage from "@/app/users/[id]/projects/page";
-import { ProfileSectionNav, ProfileTabs } from "@/components/profile-tabs";
+import { ProfileTabs } from "@/components/profile-tabs";
 
 const state = vi.hoisted(() => ({
   pathname: "/users/journal-owner",
@@ -36,8 +37,12 @@ vi.mock("next/navigation", () => ({
   usePathname: vi.fn<() => string>(() => state.pathname),
 }));
 
-vi.mock("@/components/ui/app-link", () => ({
-  AppLink: ({ children }: { children: ReactNode }) => children,
+vi.mock("next/link", () => ({
+  default: ({ href, children, ...props }: { href: string; children: ReactNode }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
 }));
 
 vi.mock("@/lib/session", () => ({
@@ -46,6 +51,8 @@ vi.mock("@/lib/session", () => ({
 
 vi.mock("@/app/users/[id]/profile-shell", () => ({
   getUserById: vi.fn<(id: string) => Promise<typeof state.user>>(async () => state.user),
+  canReadUserJournal: async (_id: string, viewerId: string | null) =>
+    state.user.journalVisibility === "public" || state.user.id === viewerId,
   ProfileHeader: mocks.ProfileHeader,
 }));
 
@@ -120,44 +127,36 @@ describe("the profile's default view", () => {
 describe("ProfileTabs", () => {
   it("does not offer a private Journal tab to a visitor", () => {
     state.pathname = `/users/${state.user.id}`;
-    const result = ProfileTabs({
-      userId: state.user.id,
-      showJournal: false,
-      showProjects: false,
-    });
-    const container = ProfileSectionNav(result.props).props.children as ReactElement<{
-      children: ReactNode;
-    }>;
-    const tabs = container.props.children as ReactElement<{ href: string }>[];
+    const html = renderToStaticMarkup(
+      <ProfileTabs
+        userId={state.user.id}
+        showJournal={false}
+        showProjects={false}
+        isOwner={false}
+      />,
+    );
 
-    expect(tabs.map((tab) => tab.props.href)).toEqual([
+    expect([...html.matchAll(/href="([^"]+)"/g)].map((match) => match[1])).toEqual([
       `/users/${state.user.id}/sends`,
       `/users/${state.user.id}/analytics`,
     ]);
   });
 
-  it("puts the owner's Projects tab after Sends", () => {
+  it("puts the owner's Projects tab after Friends and marks it current", () => {
     state.pathname = `/users/${state.user.id}/projects`;
-    const result = ProfileTabs({
-      userId: state.user.id,
-      showJournal: true,
-      showProjects: true,
-    });
-    const container = ProfileSectionNav(result.props).props.children as ReactElement<{
-      children: ReactNode;
-    }>;
-    const tabs = container.props.children as ReactElement<{
-      href: string;
-      "aria-current"?: string;
-    }>[];
+    const html = renderToStaticMarkup(
+      <ProfileTabs userId={state.user.id} showJournal showProjects isOwner />,
+    );
 
-    expect(tabs.map((tab) => tab.props.href)).toEqual([
+    expect([...html.matchAll(/href="([^"]+)"/g)].map((match) => match[1])).toEqual([
       `/users/${state.user.id}/journal`,
       `/users/${state.user.id}/sends`,
+      "/feed",
+      "/friends",
       `/users/${state.user.id}/projects`,
       `/users/${state.user.id}/analytics`,
     ]);
-    expect(tabs[2].props["aria-current"]).toBe("page");
+    expect(html).toContain(`href="/users/${state.user.id}/projects" aria-current="page"`);
   });
 });
 

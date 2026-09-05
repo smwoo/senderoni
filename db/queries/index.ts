@@ -6,3 +6,7 @@ export * from "./sends";
 export * from "./journal";
 export * from "./moderation";
 export * from "./imports";
+export * from "./friendships";
+export * from "./feed";
+
+export { canReadJournal } from "./journal-access";

@@ -1,5 +1,15 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
+export async function allowFriendshipWrite(key: string): Promise<boolean> {
+  const { env } = await getCloudflareContext({ async: true });
+  const limiter: RateLimit | undefined = env.FRIENDSHIP_RATE_LIMITER;
+  if (!limiter) {
+    console.warn("FRIENDSHIP_RATE_LIMITER is not bound — allowing the write unthrottled");
+    return true;
+  }
+  return (await limiter.limit({ key })).success;
+}
+
 /** True while `key` is still under the /contact limit set in wrangler.jsonc.
  *
  * Its own module rather than a helper inside the action, so tests can stub

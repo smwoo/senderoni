@@ -13,6 +13,8 @@ import { requireSession } from "@/lib/session";
 import { requireTrimmed } from "@/lib/validation";
 
 function revalidateProfileSurfaces(userId: string) {
+  revalidatePath("/feed");
+  revalidatePath("/friends");
   revalidatePath(`/users/${userId}`);
   revalidatePath(`/users/${userId}/journal`);
   revalidatePath(`/users/${userId}/sends`);

@@ -8,7 +8,7 @@ export { MAX_LOG_NOTE_LENGTH as MAX_JOURNAL_BODY_LENGTH } from "@/lib/log-note";
 const JOURNAL_KINDS = ["session", "training"] as const;
 export type JournalKind = (typeof JOURNAL_KINDS)[number];
 
-const JOURNAL_VISIBILITIES = ["private", "public"] as const;
+const JOURNAL_VISIBILITIES = ["private", "friends", "public"] as const;
 export type JournalVisibility = (typeof JOURNAL_VISIBILITIES)[number];
 
 export const MAX_JOURNAL_TAGS = 8;

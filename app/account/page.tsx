@@ -3,6 +3,7 @@ import { ShieldCheck, Upload } from "lucide-react";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
+import { AccountFriendRequests } from "@/components/account-friend-requests";
 import { DeleteAccountButton } from "@/components/delete-account-button";
 import { DisplayNameForm } from "@/components/display-name-form";
 import { ExportSendsButton } from "@/components/export-sends-button";
@@ -72,12 +73,15 @@ export default async function AccountPage() {
               <p className="truncate text-sm text-muted">{session.user.email}</p>
             </div>
           </div>
-          <AppLink
-            href={`/users/${session.user.id}`}
-            className={`${buttonVariants({ variant: "outline" })} shrink-0 self-start text-foreground sm:self-auto`}
-          >
-            View my profile
-          </AppLink>
+          <div className="flex shrink-0 flex-col items-start gap-2 sm:items-end">
+            <AppLink
+              href={`/users/${session.user.id}`}
+              className={`${buttonVariants({ variant: "outline" })} text-foreground`}
+            >
+              View my profile
+            </AppLink>
+            <AccountFriendRequests userId={session.user.id} />
+          </div>
         </div>
       </section>
 
@@ -119,7 +123,7 @@ export default async function AccountPage() {
 
         <AccountSection
           title="Getting started"
-          description="Learn how sessions, sends, projects, and training fit together."
+          description="Learn to log sessions, add friends, and set your journal privacy."
         >
           <ProductTour />
         </AccountSection>

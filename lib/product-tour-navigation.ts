@@ -59,12 +59,40 @@ export const PRODUCT_TOUR_STEPS: Record<ProductTourId, readonly ProductTourStepD
       target: "analytics-chart",
     },
     {
+      id: "find-climbers",
+      introducedInVersion: 2,
+      section: "Search",
+      title: "Find your climbing partners",
+      description:
+        "Open Search, choose Search climbers, and enter a name. Select Add friend on a result or profile. Private profiles don't appear in search. Try sending Riley a request.",
+      target: "friend-search",
+    },
+    {
+      id: "friend-requests",
+      introducedInVersion: 2,
+      section: "Friends",
+      title: "Friend requests",
+      description:
+        "We'll email you about new friend requests and show a dot on your account icon. Open Friends, then Requests, to accept or decline one. Try accepting Sam's request.",
+      target: "friend-requests",
+    },
+    {
+      id: "feed",
+      introducedInVersion: 2,
+      section: "Feed",
+      title: "Catch up with friends",
+      description:
+        "Open the Feed tab to see your friends' sends and journal entries, grouped by day. Select Sends to hide sessions, repeats, and training. You'll only see journal entries and notes they've shared with you.",
+      target: "friend-feed",
+    },
+    {
       id: "account",
       introducedInVersion: 1,
+      updatedInVersion: 2,
       section: "Account",
       title: "Choose what you share",
       description:
-        "Your journal starts private. Try these settings to see what visitors see. First-send notes also appear on Sends and follow your profile's privacy settings.",
+        "Choose Only me, Friends, or Public for your journal and send notes. This applies to past entries too. A private profile hides your climbing history from everyone else, including friends.",
       target: "privacy-controls",
     },
   ],

@@ -99,7 +99,7 @@ function TourInvitation({
               <Button onPress={open} isDisabled={pending}>
                 {copy.action}
               </Button>
-              {QuickAction && <QuickAction />}
+              {navigation.mode === "full" && QuickAction && <QuickAction />}
               <Button variant="ghost" onPress={dismiss} isDisabled={pending}>
                 {pending ? "Dismissing…" : "Dismiss"}
               </Button>

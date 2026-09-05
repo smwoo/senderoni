@@ -12,6 +12,51 @@ import {
 } from "@/lib/product-tour-navigation";
 
 describe("route-based tours", () => {
+  it.each(["completed", "dismissed"] as const)(
+    "offers friends, feed, and revised privacy lessons after version 1 was %s",
+    (status) => {
+      const tour = PRODUCT_TOURS[0];
+      const savedVersion = getAcknowledgedTourVersion(tour.id, [
+        { tourId: tour.id, version: 1, status },
+      ]);
+      const result = resolveProductTour(PRODUCT_TOUR_STEPS[tour.id], {
+        version: tour.version,
+        savedVersion,
+        navigation: { from: "journal", mode: "updates" },
+      });
+      expect(result.shouldInvite).toBe(true);
+      expect(result.navigation.mode).toBe("updates");
+      expect(result.steps.map((step) => step.id)).toEqual([
+        "find-climbers",
+        "friend-requests",
+        "feed",
+        "account",
+      ]);
+    },
+  );
+
+  it("includes the social lessons in full replay and stops inviting after version 2", () => {
+    const tour = PRODUCT_TOURS[0];
+    const result = resolveProductTour(PRODUCT_TOUR_STEPS[tour.id], {
+      version: tour.version,
+      savedVersion: 2,
+      navigation: { from: "account", mode: "updates" },
+    });
+    expect(result.shouldInvite).toBe(false);
+    expect(result.navigation).toEqual({ from: "account", mode: "full" });
+    expect(result.steps.map((step) => step.id)).toEqual([
+      "journal",
+      "journal-filters",
+      "sends",
+      "projects",
+      "analytics",
+      "find-climbers",
+      "friend-requests",
+      "feed",
+      "account",
+    ]);
+  });
+
   it("gives every registered tour unique, addressable steps with stable targets", () => {
     for (const tour of PRODUCT_TOURS) {
       const steps = PRODUCT_TOUR_STEPS[tour.id];

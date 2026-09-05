@@ -131,11 +131,26 @@ describe("setJournalVisibility action boundary", () => {
   it("rejects an invalid visibility", async () => {
     const otherBefore = await db.select().from(user).where(eq(user.id, "other-user")).get();
     const before = await privacy();
-    const result = await setJournalVisibility("friends");
+    const result = await setJournalVisibility("invalid");
     expect(await db.select().from(user).where(eq(user.id, "other-user")).get()).toEqual(
       otherBefore,
     );
     expect(result).toEqual({ ok: false, error: "Invalid journal visibility" });
     expect(await privacy()).toEqual(before);
   });
+});
+
+it("saves Friends sharing without accepting a pending request or changing the other account", async () => {
+  const { friendships } = await import("@/db/schema");
+  await db
+    .insert(friendships)
+    .values({ userId: "other-user", friendId: "test-user", requestedBy: "other-user" });
+  const before = await db.select().from(friendships);
+  const otherBefore = await db.select().from(user).where(eq(user.id, "other-user")).get();
+  expect(await setJournalVisibility("friends")).toEqual({ ok: true, value: undefined });
+  expect(
+    (await db.select().from(user).where(eq(user.id, "test-user")).get())?.journalVisibility,
+  ).toBe("friends");
+  expect(await db.select().from(friendships)).toEqual(before);
+  expect(await db.select().from(user).where(eq(user.id, "other-user")).get()).toEqual(otherBefore);
 });

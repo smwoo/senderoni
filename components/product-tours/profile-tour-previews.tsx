@@ -11,6 +11,7 @@ import { SendGradeCell } from "@/components/send-grade-cell";
 import { choicePillClass } from "@/components/ui/choice-pill";
 import { ListRow } from "@/components/ui/list-row";
 import { formatDate } from "@/lib/format-date";
+import type { JournalVisibility } from "@/lib/journal";
 import {
   getTourDemoJournalPage,
   TOUR_DEMO_ANALYTICS,
@@ -271,15 +272,15 @@ export function DemoAnalytics() {
 
 export function DemoAccount() {
   const [isPrivate, setIsPrivate] = useState(false);
-  const [privateJournal, setPrivateJournal] = useState(true);
+  const [journalVisibility, setJournalVisibility] = useState<JournalVisibility>("private");
   return (
     <div className="flex flex-col gap-4">
       <div data-tour-target="privacy-controls" className="flex flex-col gap-4">
         <PrivacyFields
           isPrivate={isPrivate}
-          privateJournal={privateJournal}
+          journalVisibility={journalVisibility}
           onProfileChange={setIsPrivate}
-          onJournalChange={setPrivateJournal}
+          onJournalChange={setJournalVisibility}
         />
       </div>
       <div role="status" className="rounded-lg bg-surface-secondary p-4 text-sm">
@@ -287,7 +288,7 @@ export function DemoAccount() {
         <p className="mt-1">
           {isPrivate
             ? "Alex's profile, sends, journal, and analytics are hidden."
-            : `Alex's profile, sends, and analytics are visible. The journal is ${privateJournal ? "private" : "visible too"}.`}
+            : `Alex's sends are public. Journal entries and send notes are ${journalVisibility === "private" ? "visible only to Alex" : journalVisibility === "public" ? "public" : "visible to friends"}.`}
         </p>
       </div>
     </div>

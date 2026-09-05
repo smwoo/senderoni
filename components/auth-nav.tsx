@@ -2,6 +2,8 @@
 
 import { clsx } from "clsx";
 
+import { FriendRequestDot } from "@/components/friend-request-badge";
+import { useFriendRequests } from "@/components/friend-requests-provider";
 import { NavLink } from "@/components/nav-link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserAvatar } from "@/components/ui/user-avatar";
@@ -35,6 +37,7 @@ export function AuthNav({ direction = "row", onNavigate }: AuthNavProps) {
   // hydration doesn't mismatch; the real state applies right after mount.
   const mounted = useMounted();
   const { data: session, isPending } = authClient.useSession();
+  const requests = useFriendRequests();
 
   // Shared by the placeholder and the signed-in state so they occupy the
   // same geometry.
@@ -64,6 +67,8 @@ export function AuthNav({ direction = "row", onNavigate }: AuthNavProps) {
   }
 
   if (session) {
+    const hasRequests = requests.userId === session.user.id && (requests.count ?? 0) > 0;
+    const accountLabel = hasRequests ? "Account, pending friend requests" : "Account";
     return (
       <span className={signedInGroupClass}>
         <NavLink href="/?mode=climb" onClick={onNavigate}>
@@ -81,16 +86,23 @@ export function AuthNav({ direction = "row", onNavigate }: AuthNavProps) {
         {direction === "row" ? (
           <NavLink
             href="/account"
-            aria-label="Account"
-            title="Account"
-            className="rounded-full no-underline"
+            aria-label={accountLabel}
+            title={accountLabel}
+            className="relative rounded-full no-underline"
             onClick={onNavigate}
           >
             <UserAvatar name={session.user.name} image={session.user.image} size="sm" />
+            {hasRequests && <FriendRequestDot className="absolute top-0 right-0" />}
           </NavLink>
         ) : (
-          <NavLink href="/account" onClick={onNavigate}>
+          <NavLink
+            href="/account"
+            aria-label={accountLabel}
+            className="inline-flex items-center gap-1.5"
+            onClick={onNavigate}
+          >
             Account
+            {hasRequests && <FriendRequestDot />}
           </NavLink>
         )}
       </span>

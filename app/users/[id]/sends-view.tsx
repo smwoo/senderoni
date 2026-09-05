@@ -1,4 +1,5 @@
 import { NavigationPendingProvider } from "@/components/navigation-pending";
+import { AppLink } from "@/components/ui/app-link";
 import { DISCIPLINE_LABELS } from "@/components/ui/discipline-chip";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { SidebarLayout } from "@/components/ui/page-shell";
@@ -10,6 +11,7 @@ import { getAreaBreadcrumbs, getSendsForUserPage, getUserSendsSummary } from "@/
 import type { UserSendsFilter } from "@/db/queries";
 import { formatCount } from "@/lib/format";
 import { formatDate } from "@/lib/format-date";
+import { userSendsFilterToSearchParams } from "@/lib/user-sends-filter";
 
 export async function SendsView({
   userId,
@@ -26,7 +28,7 @@ export async function SendsView({
 
   const [summary, firstPage] = await Promise.all([
     getUserSendsSummary(db, userId),
-    getSendsForUserPage(db, userId, filter, 0),
+    getSendsForUserPage(db, userId, filter, 0, undefined, viewerId),
   ]);
 
   const areaBreadcrumbs = await getAreaBreadcrumbs(
@@ -69,6 +71,16 @@ export async function SendsView({
       <SidebarLayout sidebar={<StatStrip cards={statCards} />}>
         <div className="flex flex-col gap-3">
           <SectionHeading>Sends</SectionHeading>
+          {filter.date && (
+            <p className="text-sm text-muted">
+              {formatDate(filter.date)} ·{" "}
+              <AppLink
+                href={`${basePath}?${userSendsFilterToSearchParams({ ...filter, date: undefined })}`}
+              >
+                Clear day filter
+              </AppLink>
+            </p>
+          )}
           {summary.sendCount > 0 && <UserSendsFilterToolbar filter={filter} basePath={basePath} />}
           <UserSendList
             key={JSON.stringify(filter)}
